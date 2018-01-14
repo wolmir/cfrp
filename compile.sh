@@ -1,0 +1,1 @@
+gcc -Wall main.c c_frp.c cfrp_list.c cfrp_queue.c -o main

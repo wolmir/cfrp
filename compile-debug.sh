@@ -1,0 +1,1 @@
+gcc -Wall -g main.c c_frp.c cfrp_list.c cfrp_queue.c -o dmain
