@@ -4,6 +4,8 @@
 #include "contrib/cfrp_list.h"
 #include "contrib/cfrp_queue.h"
 
+#define cfrp_bool(E) (E) ? (void*)1 : NULL // Used in places that check for NULL values, like filter.
+
 typedef enum {
   CFRP_NO_ERROR,
   CFRP_INVALID_STREAM,
@@ -13,7 +15,8 @@ typedef enum {
 typedef enum {
   CFRP_SINK,
   CFRP_TAP,
-  CFRP_MAP
+  CFRP_MAP,
+  CFRP_FILTER
 } CFRP_OP_TYPE;
 
 typedef enum {
@@ -40,5 +43,7 @@ CFRP_ERROR_ENUM cfrp_stream_send(EVENT_STREAM *stream, void *value);
 EVENT_STREAM *cfrp_stream_tap(EVENT_STREAM *stream, void* (*listener) (void *value));
 
 EVENT_STREAM *cfrp_stream_map(EVENT_STREAM *stream, void* (*func) (void *value));
+
+EVENT_STREAM *cfrp_stream_filter(EVENT_STREAM *stream, void* (*func) (void *value));
 
 #endif

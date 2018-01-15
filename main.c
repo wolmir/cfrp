@@ -5,14 +5,12 @@
 #include "cfrp/contrib/cfrp_int.h"
 
 void *print_values(void *value);
-void *mult_value(void *value);
-void *mult_value_by_four(void *value);
+void *greater_than_six(void *value);
 
 int main()
 {
   EVENT_STREAM *test_stream;
-  EVENT_STREAM *mult_stream;
-  EVENT_STREAM *other_mult_stream;
+  EVENT_STREAM *filtered_stream;
   CFRP_INT *numa = cfrp_int_of(3);
   CFRP_INT *numb = cfrp_int_of(5);
   CFRP_INT *numc = cfrp_int_of(8);
@@ -23,11 +21,9 @@ int main()
   cfrp_stream_send(test_stream, numa);
   cfrp_stream_send(test_stream, numb);
 
-  mult_stream = cfrp_stream_map(test_stream, mult_value);
-  other_mult_stream = cfrp_stream_map(test_stream, mult_value_by_four);
+  filtered_stream = cfrp_stream_filter(test_stream, greater_than_six);
 
-  cfrp_stream_tap(mult_stream, print_values);
-  cfrp_stream_tap(other_mult_stream, print_values);
+  cfrp_stream_tap(filtered_stream, print_values);
 
   cfrp_stream_send(test_stream, numc);
   cfrp_stream_send(test_stream, numd);
@@ -35,14 +31,9 @@ int main()
   return 0;
 }
 
-void *mult_value(void *value)
+void *greater_than_six(void *value)
 {
-  return cfrp_int_mult((CFRP_INT*)value, 3);
-}
-
-void *mult_value_by_four(void *value)
-{
-  return cfrp_int_mult((CFRP_INT*)value, 4);
+  return cfrp_bool(cfrp_int_get_value((CFRP_INT*)value) > 6);
 }
 
 void *print_values(void *value)
