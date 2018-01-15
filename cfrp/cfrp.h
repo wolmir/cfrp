@@ -1,8 +1,8 @@
 #ifndef C_FRP
 #define C_FRP
 
-#include "cfrp_list.h"
-#include "cfrp_queue.h"
+#include "contrib/cfrp_list.h"
+#include "contrib/cfrp_queue.h"
 
 typedef enum {
   CFRP_NO_ERROR,

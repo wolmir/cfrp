@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "c_frp.h"
-#include "cfrp_int.h"
+#include "cfrp/cfrp.h"
+#include "cfrp/contrib/cfrp_int.h"
 
 void *print_values(void *value);
 void *mult_value(void *value);
