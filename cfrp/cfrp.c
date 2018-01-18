@@ -15,8 +15,6 @@ EVENT_STREAM *cfrp_create_event_stream()
   stream->subscribers = cfrp_create_list();
   stream->sources = cfrp_create_list();
 
-  stream->old_value = NULL;
-
   stream->value_queue = cfrp_create_queue();
 
   stream->op_type = CFRP_SINK;
@@ -24,11 +22,12 @@ EVENT_STREAM *cfrp_create_event_stream()
   return stream;
 }
 
-void cfrp_notify(void *_stream, void *value)
+void cfrp_notify(void *_stream, void *_notification)
 {
+  CFRP_NOTIFICATION *notification = (CFRP_NOTIFICATION*)_notification;
   EVENT_STREAM *stream = (EVENT_STREAM*)_stream;
 
-  stream->op_func(stream, value);
+  stream->op_func(stream, notification);
 }
 
 void cfrp_notify_tap(void *_stream, void *arg)
@@ -42,15 +41,10 @@ void cfrp_notify_tap(void *_stream, void *arg)
     while (!cfrp_queue_is_empty(stream->value_queue)) {
       void *value = cfrp_dequeue(stream->value_queue);
 
-      cfrp_list_foreach(stream->subscribers, cfrp_notify, value);
+      CFRP_NOTIFICATION *new_notification = (CFRP_NOTIFICATION*)malloc(sizeof(CFRP_NOTIFICATION));
+      new_notification->value = value;
+
+      cfrp_list_foreach(stream->subscribers, cfrp_notify, new_notification);
     }
   }
-}
-
-void cfrp_update_old_value(EVENT_STREAM *stream, void *value) {
-  if (stream->old_value != NULL) {
-    free(stream->old_value);
-  }
-
-  stream->old_value = value;
 }

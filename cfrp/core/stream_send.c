@@ -17,7 +17,12 @@ CFRP_ERROR_ENUM cfrp_stream_send(EVENT_STREAM *stream, void *value)
     return CFRP_NO_SUBSCRIBERS;
   }
 
-  cfrp_list_foreach(stream->subscribers, cfrp_notify, value);
+  CFRP_NOTIFICATION *notification = (CFRP_NOTIFICATION*)malloc(sizeof(CFRP_NOTIFICATION));
+  notification->value = value;
+
+  cfrp_list_foreach(stream->subscribers, cfrp_notify, notification);
+
+  free(notification);
 
   return CFRP_NO_ERROR;
 }

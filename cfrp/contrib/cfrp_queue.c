@@ -3,13 +3,13 @@
 #include "cfrp_queue.h"
 #include "cfrp_list.h"
 
-CFRP_QUEUE *cfrp_create_queue(int initial_length)
+CFRP_QUEUE *cfrp_create_queue()
 {
   CFRP_QUEUE *queue;
 
   queue = (CFRP_QUEUE*)malloc(sizeof(CFRP_QUEUE));
 
-  queue->list = cfrp_create_list(initial_length);
+  queue->list = cfrp_create_list();
 
   return queue;
 }

@@ -5,7 +5,7 @@
 #include "../cfrp_internal.h"
 #include "../contrib/cfrp_list.h"
 
-void cfrp_tap_op(EVENT_STREAM *stream, void *value);
+void cfrp_tap_op(EVENT_STREAM *stream, CFRP_NOTIFICATION *notification);
 
 EVENT_STREAM *cfrp_stream_tap(EVENT_STREAM *source, void* (*listener) (void *value))
 {
@@ -26,7 +26,7 @@ EVENT_STREAM *cfrp_stream_tap(EVENT_STREAM *source, void* (*listener) (void *val
   return tap_stream;
 }
 
-void cfrp_tap_op(EVENT_STREAM *stream, void *value)
+void cfrp_tap_op(EVENT_STREAM *stream, CFRP_NOTIFICATION *notification)
 {
-  stream->op_arg(value);
+  stream->op_arg(notification->value);
 }

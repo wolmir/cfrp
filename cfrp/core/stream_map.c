@@ -5,7 +5,7 @@
 #include "../cfrp_internal.h"
 #include "../contrib/cfrp_list.h"
 
-void cfrp_map_op(EVENT_STREAM *stream, void *value);
+void cfrp_map_op(EVENT_STREAM *stream, CFRP_NOTIFICATION *notification);
 
 EVENT_STREAM *cfrp_stream_map(EVENT_STREAM *source, void* (*func) (void *value))
 {
@@ -24,11 +24,14 @@ EVENT_STREAM *cfrp_stream_map(EVENT_STREAM *source, void* (*func) (void *value))
   return map_stream;
 }
 
-void cfrp_map_op(EVENT_STREAM *stream, void *value)
+void cfrp_map_op(EVENT_STREAM *stream, CFRP_NOTIFICATION *notification)
 {
-  void *new_value = stream->op_arg(value);
+  void *new_value = stream->op_arg(notification->value);
 
-  cfrp_update_old_value(stream, new_value);
+  CFRP_NOTIFICATION *new_notification = (CFRP_NOTIFICATION*)malloc(sizeof(CFRP_NOTIFICATION));
+  new_notification->value = new_value;
 
-  cfrp_list_foreach(stream->subscribers, cfrp_notify, new_value);
+  cfrp_list_foreach(stream->subscribers, cfrp_notify, new_notification);
+
+  free(new_notification);
 }

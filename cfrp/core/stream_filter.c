@@ -5,7 +5,7 @@
 #include "../cfrp_internal.h"
 #include "../contrib/cfrp_list.h"
 
-void cfrp_filter_op(EVENT_STREAM *stream, void *value);
+void cfrp_filter_op(EVENT_STREAM *stream, CFRP_NOTIFICATION *notification);
 
 EVENT_STREAM *cfrp_stream_filter(EVENT_STREAM *source, void* (*func) (void *value))
 {
@@ -24,11 +24,11 @@ EVENT_STREAM *cfrp_stream_filter(EVENT_STREAM *source, void* (*func) (void *valu
   return filter_stream;
 }
 
-void cfrp_filter_op(EVENT_STREAM *stream, void *value)
+void cfrp_filter_op(EVENT_STREAM *stream, CFRP_NOTIFICATION *notification)
 {
-  void *result = stream->op_arg(value);
+  void *result = stream->op_arg(notification->value);
 
   if (result != NULL) {
-    cfrp_list_foreach(stream->subscribers, cfrp_notify, value);
+    cfrp_list_foreach(stream->subscribers, cfrp_notify, notification);
   }
 }
